@@ -9,7 +9,7 @@ module Raylib
   attach_function :close_window, :CloseWindow, [], :void
 
   # Check if window has been initialized successfully
-  attach_function :is_window_ready, :IsWindowReady, [], :bool
+  attach_function :is_window_valid, :IsWindowValid, [], :bool
 
   # Check if window is currently fullscreen
   attach_function :is_window_fullscreen, :IsWindowFullscreen, [], :bool
@@ -225,7 +225,7 @@ module Raylib
   attach_function :load_shader_from_memory, :LoadShaderFromMemory, [:pointer, :pointer], Shader.by_value
 
   # Check if a shader is ready
-  attach_function :is_shader_ready, :IsShaderReady, [Shader.by_value], :bool
+  attach_function :is_shader_valid, :IsShaderValid, [Shader.by_value], :bool
 
   # Get shader uniform location
   attach_function :get_shader_location, :GetShaderLocation, [Shader.by_value, :pointer], :int
@@ -579,10 +579,10 @@ module Raylib
   attach_function :draw_line_bezier, :DrawLineBezier, [Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
 
   # Draw line using quadratic bezier curves with a control point
-  attach_function :draw_line_bezier_quad, :DrawLineBezierQuad, [Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
+  attach_function :draw_spline_bezier_quadratic, :DrawSplineBezierQuadratic, [Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
 
   # Draw line using cubic bezier curves with 2 control points
-  attach_function :draw_line_bezier_cubic, :DrawLineBezierCubic, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
+  attach_function :draw_spline_bezier_cubic, :DrawSplineBezierCubic, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
 
   # Draw lines sequence
   attach_function :draw_line_strip, :DrawLineStrip, [:pointer, :int, Color.by_value], :void
@@ -720,7 +720,7 @@ module Raylib
   attach_function :load_image_from_screen, :LoadImageFromScreen, [], Image.by_value
 
   # Check if an image is ready
-  attach_function :is_image_ready, :IsImageReady, [Image.by_value], :bool
+  attach_function :is_image_valid, :IsImageValid, [Image.by_value], :bool
 
   # Unload image from CPU memory (RAM)
   attach_function :unload_image, :UnloadImage, [Image.by_value], :void
@@ -734,11 +734,8 @@ module Raylib
   # Generate image: plain color
   attach_function :gen_image_color, :GenImageColor, [:int, :int, Color.by_value], Image.by_value
 
-  # Generate image: vertical gradient
-  attach_function :gen_image_gradient_v, :GenImageGradientV, [:int, :int, Color.by_value, Color.by_value], Image.by_value
-
-  # Generate image: horizontal gradient
-  attach_function :gen_image_gradient_h, :GenImageGradientH, [:int, :int, Color.by_value, Color.by_value], Image.by_value
+  # Generate image: linear gradient
+  attach_function :gen_image_gradient_v, :GenImageGradientLinear, [:int, :int, :int, Color.by_value, Color.by_value], Image.by_value
 
   # Generate image: radial gradient
   attach_function :gen_image_gradient_radial, :GenImageGradientRadial, [:int, :int, :float, Color.by_value, Color.by_value], Image.by_value
@@ -918,13 +915,13 @@ module Raylib
   attach_function :load_render_texture, :LoadRenderTexture, [:int, :int], RenderTexture2D.by_value
 
   # Check if a texture is ready
-  attach_function :is_texture_ready, :IsTextureReady, [Texture2D.by_value], :bool
+  attach_function :is_texture_valid, :IsTextureValid, [Texture2D.by_value], :bool
 
   # Unload texture from GPU memory (VRAM)
   attach_function :unload_texture, :UnloadTexture, [Texture2D.by_value], :void
 
   # Check if a render texture is ready
-  attach_function :is_render_texture_ready, :IsRenderTextureReady, [RenderTexture2D.by_value], :bool
+  attach_function :is_render_texture_valid, :IsRenderTextureValid, [RenderTexture2D.by_value], :bool
 
   # Unload render texture from GPU memory (VRAM)
   attach_function :unload_render_texture, :UnloadRenderTexture, [RenderTexture2D.by_value], :void
@@ -1023,7 +1020,7 @@ module Raylib
   attach_function :load_font_from_memory, :LoadFontFromMemory, [:pointer, :pointer, :int, :int, :pointer, :int], Font.by_value
 
   # Check if a font is ready
-  attach_function :is_font_ready, :IsFontReady, [Font.by_value], :bool
+  attach_function :is_font_valid, :IsFontValid, [Font.by_value], :bool
 
   # Load font data for further use
   attach_function :load_font_data, :LoadFontData, [:pointer, :int, :int, :pointer, :int, :int], :pointer
@@ -1215,7 +1212,7 @@ module Raylib
   attach_function :load_model_from_mesh, :LoadModelFromMesh, [Mesh.by_value], Model.by_value
 
   # Check if a model is ready
-  attach_function :is_model_ready, :IsModelReady, [Model.by_value], :bool
+  attach_function :is_model_valid, :IsModelValid, [Model.by_value], :bool
 
   # Unload model (including meshes) from memory (RAM and/or VRAM)
   attach_function :unload_model, :UnloadModel, [Model.by_value], :void
@@ -1311,7 +1308,7 @@ module Raylib
   attach_function :load_material_default, :LoadMaterialDefault, [], Material.by_value
 
   # Check if a material is ready
-  attach_function :is_material_ready, :IsMaterialReady, [Material.by_value], :bool
+  attach_function :is_material_valid, :IsMaterialValid, [Material.by_value], :bool
 
   # Unload material from GPU memory (VRAM)
   attach_function :unload_material, :UnloadMaterial, [Material.by_value], :void
@@ -1380,7 +1377,7 @@ module Raylib
   attach_function :load_wave_from_memory, :LoadWaveFromMemory, [:pointer, :pointer, :int], Wave.by_value
 
   # Checks if wave data is ready
-  attach_function :is_wave_ready, :IsWaveReady, [Wave.by_value], :bool
+  attach_function :is_wave_valid, :IsWaveValid, [Wave.by_value], :bool
 
   # Load sound from file
   attach_function :load_sound, :LoadSound, [:pointer], Sound.by_value
@@ -1389,7 +1386,7 @@ module Raylib
   attach_function :load_sound_from_wave, :LoadSoundFromWave, [Wave.by_value], Sound.by_value
 
   # Checks if a sound is ready
-  attach_function :is_sound_ready, :IsSoundReady, [Sound.by_value], :bool
+  attach_function :is_sound_valid, :IsSoundValid, [Sound.by_value], :bool
 
   # Update sound buffer with new data
   attach_function :update_sound, :UpdateSound, [Sound.by_value, :pointer, :int], :void
@@ -1452,7 +1449,7 @@ module Raylib
   attach_function :load_music_stream_from_memory, :LoadMusicStreamFromMemory, [:pointer, :pointer, :int], Music.by_value
 
   # Checks if a music stream is ready
-  attach_function :is_music_ready, :IsMusicReady, [Music.by_value], :bool
+  attach_function :is_music_valid, :IsMusicValid, [Music.by_value], :bool
 
   # Unload music stream
   attach_function :unload_music_stream, :UnloadMusicStream, [Music.by_value], :void
@@ -1497,7 +1494,7 @@ module Raylib
   attach_function :load_audio_stream, :LoadAudioStream, [:uint, :uint, :uint], AudioStream.by_value
 
   # Checks if an audio stream is ready
-  attach_function :is_audio_stream_ready, :IsAudioStreamReady, [AudioStream.by_value], :bool
+  attach_function :is_audio_stream_valid, :IsAudioStreamValid, [AudioStream.by_value], :bool
 
   # Unload audio stream and free memory
   attach_function :unload_audio_stream, :UnloadAudioStream, [AudioStream.by_value], :void
