@@ -734,11 +734,8 @@ module Raylib
   # Generate image: plain color
   attach_function :gen_image_color, :GenImageColor, [:int, :int, Color.by_value], Image.by_value
 
-  # Generate image: vertical gradient
-  attach_function :gen_image_gradient_v, :GenImageGradientV, [:int, :int, Color.by_value, Color.by_value], Image.by_value
-
-  # Generate image: horizontal gradient
-  attach_function :gen_image_gradient_h, :GenImageGradientH, [:int, :int, Color.by_value, Color.by_value], Image.by_value
+  # Generate image: linear gradient
+  attach_function :gen_image_gradient_v, :GenImageGradientLinear, [:int, :int, :int, Color.by_value, Color.by_value], Image.by_value
 
   # Generate image: radial gradient
   attach_function :gen_image_gradient_radial, :GenImageGradientRadial, [:int, :int, :float, Color.by_value, Color.by_value], Image.by_value
