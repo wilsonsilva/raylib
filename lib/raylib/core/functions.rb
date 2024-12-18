@@ -579,10 +579,10 @@ module Raylib
   attach_function :draw_line_bezier, :DrawLineBezier, [Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
 
   # Draw line using quadratic bezier curves with a control point
-  attach_function :draw_line_bezier_quad, :DrawLineBezierQuad, [Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
+  attach_function :draw_spline_bezier_quadratic, :DrawSplineBezierQuadratic, [Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
 
   # Draw line using cubic bezier curves with 2 control points
-  attach_function :draw_line_bezier_cubic, :DrawLineBezierCubic, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
+  attach_function :draw_spline_bezier_cubic, :DrawSplineBezierCubic, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
 
   # Draw lines sequence
   attach_function :draw_line_strip, :DrawLineStrip, [:pointer, :int, Color.by_value], :void
